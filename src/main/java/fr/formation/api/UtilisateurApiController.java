@@ -41,7 +41,7 @@ public class UtilisateurApiController {
 	        }
 	    }
 
-	    // Endpoint pour récupérer un mot de passe oublié
+	    // Endpoint pour récupérer un mot de passe oublie
 	    @PostMapping("/recuperation-mot-de-passe")
 	    public ResponseEntity<?> recupererMotDePasseOublie(@RequestParam String email) {
 	        try {
