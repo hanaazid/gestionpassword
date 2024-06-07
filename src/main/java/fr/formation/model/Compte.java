@@ -1,19 +1,43 @@
 package fr.formation.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name="compte")
 public class Compte {
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private String id;
+	@Column(nullable=false)
 	private String platformname;
+	@Column(nullable=false)
 	private String description;
+	@Column(nullable=false)
 	private LocalDateTime dateAdded;
+	@Column(nullable=false)
 	private LocalDateTime dateUpdate;
+	@Column(nullable=false)
 	private String userName;
+	@Column(nullable=false)
 	private String email;
+	@Column(nullable=false)
 	private String adressUrl;
+	@Column(nullable=false)
 	private String password;
 	
+	@OneToMany
+	private List<Utilisateur> utilisateurs;
+
 
 	public String getId() {
 		return id;

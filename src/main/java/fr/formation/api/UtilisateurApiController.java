@@ -2,6 +2,8 @@ package fr.formation.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,6 +54,19 @@ public class UtilisateurApiController {
 	        }
 	    }
 	}
-
-
+    // Endpoint pour récupérer la liste des utilisateurs avec les mots de passe masqués
+   // @GetMapping("/liste-mots-de-passe-masques")
+	/*
+	 * public Iterable<Utilisateur> getListeUtilisateursMasques() { return
+	 * utilisateurService.getListeUtilisateursMasques(); }
+	 * 
+	 * // Endpoint pour récupérer un utilisateur avec son mot de passe visible après
+	 * "consulter"
+	 * 
+	 * @GetMapping("/{id}") public Utilisateur getUtilisateur(@PathVariable Long id)
+	 * { return utilisateurService.getUtilisateur(id); }
+	 */
 }
+
+	
+

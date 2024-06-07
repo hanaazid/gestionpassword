@@ -2,17 +2,42 @@ package fr.formation.model;
 
 import java.time.LocalDateTime;
 
-public class Utilisateur {
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
+
+@Entity
+@Table(name = "utilisateur" )
+public class Utilisateur {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column
 	private String id;
+	@Column(nullable=false)
 	private String name;
+	@Column(nullable=false)
 	private LocalDateTime dateBirth;
+	@Column(nullable=false)
 	private String email;
+	@Column(nullable=false)
 	private String password;
+	@Column(name="dateinscription")
 	private LocalDateTime DateInscription;
 	
 	
 	
+	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	public LocalDateTime getDateInscription() {
 		return DateInscription;
 	}

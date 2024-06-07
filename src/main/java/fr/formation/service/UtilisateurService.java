@@ -92,6 +92,26 @@ public class UtilisateurService {
         }
         throw new IllegalArgumentException("Adresse e-mail non trouvée.");
     }
+    
+    public Iterable<Utilisateur> getListeUtilisateursMasques() {
+        for (Utilisateur utilisateur : utilisateurs) {
+            // Masquer le mot de passe pour chaque utilisateur
+            utilisateur.setPassword("********"); // ou tout autre valeur de masquage que vous préférez
+        }
+        return utilisateurs;
+    }
+
+    public Utilisateur getUtilisateur(Long id) {
+        Utilisateur utilisateur = utilisateurs.stream()
+                .filter(u -> u.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé avec l'ID: " + id));
+
+        // Afficher le mot de passe complet seulement si l'utilisateur le demande
+        // Vous pouvez implémenter cette logique selon vos besoins
+
+        return utilisateur;
+    }
 }
 	
 
