@@ -2,11 +2,17 @@ package fr.formation.model;
 
 import java.time.LocalDateTime;
 
+import java.util.List;
+import org.hibernate.annotations.UuidGenerator;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 
@@ -16,11 +22,10 @@ public class Utilisateur {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column
-	private String id;
+	private Integer id;
 	@Column(nullable=false)
 	private String name;
-	@Column(nullable=false)
+	@Column(name="dateBirth")
 	private LocalDateTime dateBirth;
 	@Column(nullable=false)
 	private String email;
@@ -28,33 +33,39 @@ public class Utilisateur {
 	private String password;
 	@Column(name="dateinscription")
 	private LocalDateTime DateInscription;
+	@JsonIgnoreProperties("utilisateur") // Ignorer la sérialisation de la propriété "utilisateur" dans Compte
+	@OneToMany(mappedBy = "utilisateur")
+	private List<Compte> compteplatforms;
 	
+	//private List<Notes> listNotes;
 	
+	 public Utilisateur() {}
+	 
 	
-	
-	public String getId() {
+
+	public Integer getId() {
 		return id;
 	}
-	public void setId(String id) {
+
+
+
+	public void setId(Integer id) {
 		this.id = id;
 	}
-	public LocalDateTime getDateInscription() {
-		return DateInscription;
-	}
-	public void setDateInscription(LocalDateTime dateInscription) {
-		DateInscription = dateInscription;
-	}
+
+
+
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
 	}
-	public LocalDateTime getDateNaissance() {
+	public LocalDateTime getDateBirth() {
 		return dateBirth;
 	}
-	public void setDateNaissance(LocalDateTime dateNaissance) {
-		this.dateBirth = dateNaissance;
+	public void setDateBirth(LocalDateTime dateBirth) {
+		this.dateBirth = dateBirth;
 	}
 	public String getEmail() {
 		return email;
@@ -68,6 +79,19 @@ public class Utilisateur {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
+	public LocalDateTime getDateInscription() {
+		return DateInscription;
+	}
+	public void setDateInscription(LocalDateTime dateInscription) {
+		DateInscription = dateInscription;
+	}
+	public List<Compte> getCompteplatforms() {
+		return compteplatforms;
+	}
+	public void setCompteplatforms(List<Compte> compteplatforms) {
+		this.compteplatforms = compteplatforms;
+	}
+	
 }
-
+	
+	

@@ -1,6 +1,7 @@
 package fr.formation.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,11 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fr.formation.model.Utilisateur;
 import fr.formation.service.UtilisateurService;
+import jakarta.websocket.server.PathParam;
 
-public class UtilisateurApiController {
+
 	@RestController
 	@RequestMapping("/api/utilisateurs")
-	public class UtilisateurController {
+	public class UtilisateurApiController {
 
 	    @Autowired
 	    private UtilisateurService utilisateurService;
@@ -29,21 +31,24 @@ public class UtilisateurApiController {
 	            return ResponseEntity.ok("Inscription réussie");
 	        } catch (IllegalArgumentException e) {
 	            return ResponseEntity.badRequest().body(e.getMessage());
+	        } catch (Exception e) {
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur interne du serveur");
 	        }
 	    }
 
-	    // Endpoint pour connecter un utilisateur
+
+	    // pour connecter un utilisateur
 	    @PostMapping("/connexion")
-	    public ResponseEntity<?> connecterUtilisateur(@RequestParam String email, @RequestParam String motDePasse) {
+	    public ResponseEntity<?> connecterUtilisateur(@RequestParam String email, @RequestParam String password) {
 	        try {
-	            Utilisateur utilisateur = utilisateurService.connecterUtilisateur(email, motDePasse);
+	            Utilisateur utilisateur = utilisateurService.connecterUtilisateur(email, password);
 	            return ResponseEntity.ok(utilisateur);
 	        } catch (IllegalArgumentException e) {
 	            return ResponseEntity.badRequest().body(e.getMessage());
 	        }
 	    }
 
-	    // Endpoint pour récupérer un mot de passe oublie
+	    // pour récupérer un mot de passe oublie
 	    @PostMapping("/recuperation-mot-de-passe")
 	    public ResponseEntity<?> recupererMotDePasseOublie(@RequestParam String email) {
 	        try {
@@ -66,7 +71,7 @@ public class UtilisateurApiController {
 	 * @GetMapping("/{id}") public Utilisateur getUtilisateur(@PathVariable Long id)
 	 * { return utilisateurService.getUtilisateur(id); }
 	 */
-}
+
 
 	
 

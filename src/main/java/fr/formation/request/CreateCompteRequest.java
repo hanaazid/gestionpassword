@@ -1,33 +1,33 @@
 package fr.formation.request;
 
-import java.time.LocalDateTime;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public class CompteRequest {
-	 
-    @NotBlank
+public class CreateCompteRequest {
+	
+    @NotNull
+    private Integer utilisateurId;
+    
+    @NotNull
     private String platformname;
    
     @NotNull
     private String description;
     
-    private LocalDateTime dateAdded;
-    
-    private LocalDateTime dateUpdate;
-    
     @NotBlank
     private String userName;
     
-    @NotBlank
+    @NotNull
     private String email;
     
     @NotNull
     private String adressUrl;
     
-    @NotBlank
+    @NotNull
     private String password;
+    
+   
+    
 
 	public String getPlatformname() {
 		return platformname;
@@ -43,22 +43,6 @@ public class CompteRequest {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public LocalDateTime getDateAdded() {
-		return dateAdded;
-	}
-
-	public void setDateAdded(LocalDateTime dateAdded) {
-		this.dateAdded = dateAdded;
-	}
-
-	public LocalDateTime getDateUpdate() {
-		return dateUpdate;
-	}
-
-	public void setDateUpdate(LocalDateTime dateUpdate) {
-		this.dateUpdate = dateUpdate;
 	}
 
 	public String getUserName() {
@@ -93,9 +77,14 @@ public class CompteRequest {
 		this.password = password;
 	}
 
+	public Integer getUtilisateurId() {
+		return utilisateurId;
+	}
+
+	public void setUtilisateurId(Integer utilisateurId) {
+		this.utilisateurId = utilisateurId;
+	}
+
     
-    
-    
-    
-    
+
 }

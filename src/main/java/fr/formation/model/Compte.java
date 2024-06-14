@@ -1,23 +1,28 @@
 package fr.formation.model;
 
 import java.time.LocalDateTime;
-import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+
+
 
 @Entity
 @Table(name="compte")
-public class Compte {
-	
+@JsonIgnoreProperties("utilisateur") // Ignorer la sérialisation de la propriété "utilisateur"
+public class Compte {//compteplateforme
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private String id;
+	private Integer id;
 	@Column(nullable=false)
 	private String platformname;
 	@Column(nullable=false)
@@ -34,15 +39,18 @@ public class Compte {
 	private String adressUrl;
 	@Column(nullable=false)
 	private String password;
+	@ManyToOne
+	@JoinColumn(name = "utilisateur_id", nullable = false)
+	private Utilisateur utilisateur;
+
+
+	public Compte() {}
 	
-	@OneToMany
-	private List<Utilisateur> utilisateurs;
-
-
-	public String getId() {
+	
+	public Integer getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	public String getPlatformname() {
@@ -72,6 +80,11 @@ public class Compte {
 	public String getUserName() {
 		return userName;
 	}
+
+	/*
+	 * public List<Notes> getListNotes() { return listNotes; } public void
+	 * setListNotes(List<Notes> listNotes) { this.listNotes = listNotes; }
+	 */
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
@@ -94,6 +107,15 @@ public class Compte {
 		this.password = password;
 	}
 
-	
-}
 
+	public Utilisateur getUtilisateur() {
+		return utilisateur;
+	}
+
+
+	public void setUtilisateur(Utilisateur utilisateur) {
+		this.utilisateur = utilisateur;
+	}
+
+
+}
