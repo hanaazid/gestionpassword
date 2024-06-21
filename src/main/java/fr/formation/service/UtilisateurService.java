@@ -116,6 +116,10 @@ public class UtilisateurService {
 		return utilisateurRepository.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé."));
 	}
+	// Delete of the user
+	public void deleteUtilisateur(Integer id) {
+		 utilisateurRepository.deleteById(id);
+	}
 }
 
 

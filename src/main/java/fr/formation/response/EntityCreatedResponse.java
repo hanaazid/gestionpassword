@@ -8,11 +8,16 @@ public class EntityCreatedResponse {
 	private Integer utilisateurId;
 	
 	
+	public EntityCreatedResponse() {
+		super();
+	}
 	
 	public EntityCreatedResponse(Integer id, Integer utilisateurId) {
+		super();
 		this.id = id;
 		this.utilisateurId = utilisateurId;
 	}
+
 	public Integer getId() {
 		return id;
 	}

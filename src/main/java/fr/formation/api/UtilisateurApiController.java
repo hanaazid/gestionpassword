@@ -3,16 +3,23 @@ package fr.formation.api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import fr.formation.model.Utilisateur;
+import fr.formation.repo.CompteRepository;
+import fr.formation.request.ModifyUserRequest;
+import fr.formation.service.NotesService;
 import fr.formation.service.UtilisateurService;
+import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 
 
@@ -22,6 +29,12 @@ import jakarta.websocket.server.PathParam;
 
 	    @Autowired
 	    private UtilisateurService utilisateurService;
+	    
+	    @Autowired
+	    private CompteRepository repoCompte;
+	    
+	    @Autowired
+	    private NotesService notesService;
 
 	    // Endpoint pour inscrire un utilisateur
 	    @PostMapping("/inscription")
@@ -58,6 +71,39 @@ import jakarta.websocket.server.PathParam;
 	            return ResponseEntity.badRequest().body(e.getMessage());
 	        }
 	    }
+	
+	    @PutMapping("/{idUtilisateur}")
+	    public void modifyUser(@Valid @RequestBody ModifyUserRequest request,
+	    		@RequestParam("id") Integer id) {
+	    	
+	    	Utilisateur oldUser = utilisateurService.getUtilisateur(id);
+	    	
+	    	if (oldUser.getMotPrimaire() != request.getMotPrimaire()) {
+	    		//decrypt the old content and encrypt with the new motPrimaire
+	    		
+	    		
+	    	};
+	    	
+	    	
+	    }
+	    
+	    
+	    // User Delete including it's account(Platform Web) and it's Notes  
+	    @DeleteMapping("/{idUtilisateur}")
+	    @Transactional
+	    public void deleteUser(@PathVariable int idUtilisateur) {
+	    	
+	    	// delete it's account ( Platform Web Site
+	    	repoCompte.deleteByUtilisateurId(idUtilisateur);
+	    	
+	    	// delete of it's note
+	    	notesService.deleteNotesByUserId(idUtilisateur);
+	    	
+	    	// delete of the user
+	    	utilisateurService.deleteUtilisateur(idUtilisateur);
+	    	
+	    }
+	    
 	}
     // Endpoint pour récupérer la liste des utilisateurs avec les mots de passe masqués
    // @GetMapping("/liste-mots-de-passe-masques")

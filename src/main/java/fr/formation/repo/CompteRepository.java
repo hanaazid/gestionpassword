@@ -10,6 +10,8 @@ public interface CompteRepository extends JpaRepository<Compte, Integer> {
 	boolean existsById(Integer id);
 	
 	List<Compte> findByUtilisateurId(Integer idUtilisateur);
+	
+	void deleteByUtilisateurId(Integer idUtilisateur);
 
 
 }

@@ -27,10 +27,13 @@ public class Utilisateur {
 	private String name;
 	@Column(name="dateBirth")
 	private LocalDateTime dateBirth;
+	
 	@Column(nullable=false)
 	private String email;
 	@Column(nullable=false)
 	private String password;
+	@Column(nullable=false, name="motprimaire")
+	private String motPrimaire;
 	@Column(name="dateinscription")
 	private LocalDateTime DateInscription;
 	@JsonIgnoreProperties("utilisateur") // Ignorer la sérialisation de la propriété "utilisateur" dans Compte
@@ -78,6 +81,13 @@ public class Utilisateur {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public String getMotPrimaire() {
+		return motPrimaire;
+	}
+
+	public void setMotPrimaire(String motPrimaire) {
+		this.motPrimaire = motPrimaire;
 	}
 	public LocalDateTime getDateInscription() {
 		return DateInscription;
