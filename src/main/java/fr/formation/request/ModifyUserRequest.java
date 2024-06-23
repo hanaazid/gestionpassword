@@ -1,18 +1,19 @@
 package fr.formation.request;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+
 
 public class ModifyUserRequest {
 
+	// only name, dateBirth , email, motPrimaire can be modified 
 	private String name;
 	
-	private LocalDateTime dateBirth;
+	private LocalDate dateBirth;
 
 	private String email;
 
-	private String password;
-
 	private String motPrimaire;
+	
 
 	public String getName() {
 		return name;
@@ -22,11 +23,11 @@ public class ModifyUserRequest {
 		this.name = name;
 	}
 
-	public LocalDateTime getDateBirth() {
+	public LocalDate getDateBirth() {
 		return dateBirth;
 	}
 
-	public void setDateBirth(LocalDateTime dateBirth) {
+	public void setDateBirth(LocalDate dateBirth) {
 		this.dateBirth = dateBirth;
 	}
 
@@ -38,13 +39,13 @@ public class ModifyUserRequest {
 		this.email = email;
 	}
 
-	public String getPassword() {
-		return password;
+	/*public String getPassword() {
+		return password;dateBirth
 	}
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
+	}*/
 
 	public String getMotPrimaire() {
 		return motPrimaire;

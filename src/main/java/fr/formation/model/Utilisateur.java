@@ -1,7 +1,7 @@
 package fr.formation.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-
 import java.util.List;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -9,6 +9,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,8 +27,11 @@ public class Utilisateur {
 	private Integer id;
 	@Column(nullable=false)
 	private String name;
+	@Column(nullable=false)
+	@Enumerated(EnumType.STRING)
+	private RoleEnum role;
 	@Column(name="dateBirth")
-	private LocalDateTime dateBirth;
+	private LocalDate dateBirth;
 	
 	@Column(nullable=false)
 	private String email;
@@ -46,6 +51,18 @@ public class Utilisateur {
 	 
 	
 
+	public RoleEnum getRole() {
+		return role;
+	}
+
+
+
+	public void setRole(RoleEnum role) {
+		this.role = role;
+	}
+
+
+
 	public Integer getId() {
 		return id;
 	}
@@ -64,10 +81,10 @@ public class Utilisateur {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public LocalDateTime getDateBirth() {
+	public LocalDate getDateBirth() {
 		return dateBirth;
 	}
-	public void setDateBirth(LocalDateTime dateBirth) {
+	public void setDateBirth(LocalDate dateBirth) {
 		this.dateBirth = dateBirth;
 	}
 	public String getEmail() {

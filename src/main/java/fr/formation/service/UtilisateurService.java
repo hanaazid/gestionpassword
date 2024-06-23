@@ -1,11 +1,14 @@
 package fr.formation.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import fr.formation.model.RoleEnum;
 import fr.formation.model.Utilisateur;
 import fr.formation.repo.UtilisateurRepository;
 
@@ -47,6 +50,11 @@ public class UtilisateurService {
 		// Définir la date d'inscription
 		utilisateur.setDateInscription(LocalDateTime.now());
 		// Ajouter l'utilisateur à la liste
+		
+		//Default value of user'rile is USER
+		if (utilisateur.getRole() == null ) {
+			utilisateur.setRole(RoleEnum.USER);
+		}
 		utilisateurs.add(utilisateur);
 	}
 

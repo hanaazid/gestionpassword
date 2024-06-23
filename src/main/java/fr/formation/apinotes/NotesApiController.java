@@ -64,10 +64,11 @@ public class NotesApiController {
 	@GetMapping("/{idUtilisateur}")
 	public List<Notes> getNoteByIdUtilsateur(@PathVariable int idUtilisateur)
 	{
-		String requeste = "http://localhost:8081/api/notes/" + idUtilisateur;
-		System.out.println(requeste);
+		// The note must be returned with the content clear ( decrypted )
+		String requestUrl = "http://localhost:8081/api/notes/" + idUtilisateur+ "/allnotesuser";
+		
         ResponseEntity<List<Notes>> response = this.restTemplate
-                .exchange(requeste,   
+                .exchange(requestUrl,   
                         HttpMethod.GET,
                         null,
                         new ParameterizedTypeReference<List<Notes>>() {});
@@ -76,7 +77,7 @@ public class NotesApiController {
         List<Notes> notesClear = new ArrayList<Notes>();
         String contenuClear = "";
         Integer idUser = idUtilisateur;
-        //int cpt = 0;
+        
         for ( Notes note : notes ) {
         	contenuClear = note.getContenu();
         	
@@ -111,7 +112,6 @@ public class NotesApiController {
 	// Création de note
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-  
     public EntityCreatedResponse create(@Valid @RequestBody CreateNotesRequest request) {
     	
 		EntityCreatedResponse entity = new EntityCreatedResponse();
@@ -166,6 +166,9 @@ public class NotesApiController {
         };
         //Verify that the note exist in the remote table
         Boolean noteExist =  Boolean.FALSE;
+        System.out.println("id "+ id);
+        System.out.println("id utilisateur"+ id);
+        System.out.println("id request"+ request.getId());
         String requestUrlNote = "http://localhost:8081/api/notes/" + request.getId()+"/note";
         noteExist = this.restTemplate.getForObject(requestUrlNote, Boolean.class);
         if(!noteExist){

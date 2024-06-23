@@ -1,5 +1,6 @@
 package fr.formation.api;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fr.formation.model.Utilisateur;
 import fr.formation.repo.CompteRepository;
+import fr.formation.repo.UtilisateurRepository;
 import fr.formation.request.ModifyUserRequest;
 import fr.formation.service.NotesService;
 import fr.formation.service.UtilisateurService;
@@ -31,7 +33,10 @@ import jakarta.websocket.server.PathParam;
 	    private UtilisateurService utilisateurService;
 	    
 	    @Autowired
-	    private CompteRepository repoCompte;
+	    private CompteRepository compteRepo;
+	    
+	    @Autowired
+	    private UtilisateurRepository userRepo;
 	    
 	    @Autowired
 	    private NotesService notesService;
@@ -71,30 +76,37 @@ import jakarta.websocket.server.PathParam;
 	            return ResponseEntity.badRequest().body(e.getMessage());
 	        }
 	    }
-	
-	    @PutMapping("/{idUtilisateur}")
-	    public void modifyUser(@Valid @RequestBody ModifyUserRequest request,
-	    		@RequestParam("id") Integer id) {
+	    // List of Users
+	   
+	    // User modification 
+	    @PutMapping  //("/{id}")
+	    public void modifyUser(@Valid @RequestBody ModifyUserRequest request
+	    		,@RequestParam("id") Integer id) {
 	    	
-	    	Utilisateur oldUser = utilisateurService.getUtilisateur(id);
+	    	
+	    	//Get the old value of the user
+	    	Utilisateur oldUser =  userRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé.")) ;
+	    	
 	    	
 	    	if (oldUser.getMotPrimaire() != request.getMotPrimaire()) {
 	    		//decrypt the old content and encrypt with the new motPrimaire
 	    		
-	    		
+	    		notesService.modifyNotesByUserId(id,  oldUser.getMotPrimaire() , request.getMotPrimaire());
 	    	};
 	    	
+	    	BeanUtils.copyProperties(request, oldUser); // update with new data
+	    	//update the user
+	    	userRepo.save(oldUser);
 	    	
 	    }
-	    
-	    
+	        
 	    // User Delete including it's account(Platform Web) and it's Notes  
 	    @DeleteMapping("/{idUtilisateur}")
 	    @Transactional
 	    public void deleteUser(@PathVariable int idUtilisateur) {
 	    	
 	    	// delete it's account ( Platform Web Site
-	    	repoCompte.deleteByUtilisateurId(idUtilisateur);
+	    	compteRepo.deleteByUtilisateurId(idUtilisateur);
 	    	
 	    	// delete of it's note
 	    	notesService.deleteNotesByUserId(idUtilisateur);
