@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,37 +38,41 @@ public class PwdApiController {
 	@Autowired
 	public RestTemplate restTemplate; 
 	
-	@Autowired
-    public UtilisateurRepository repo;
+	//@Autowired
+    //public UtilisateurRepository repo;
 	
 	@Autowired
 	public PasswordConvertService pwdService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(PwdApiController.class);
 	
-	@GetMapping("/{idUtilisateur}")  
-	public Boolean getNoteById(@PathVariable int idUtilisateur, 
-			@RequestParam  String password ){
+	@GetMapping()  
+	public ResponseEntity<?> passwordExist( 
+			@RequestParam  String password ) throws NoSuchAlgorithmException{
 		
-        String pwdCrypte = "";
-		try {
-			pwdCrypte = pwdService.encrypt(password, idUtilisateur);
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        //String pwdCrypte = "";
+		//pwdCrypte = pwdService.encrypt_Sha_1(password);
 		
-		String requestUrl = "http://localhost:8083//api/password/" + pwdCrypte;
-		System.out.println(pwdCrypte);
+		//System.out.println("clair : "+ password + " - crypte : "+ pwdCrypte );
+		
+		String requestUrl = "http://localhost:8083/api/password/" + password;
+		//System.out.println(pwdCrypte);
 		
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("password", pwdCrypte);
+		//params.put("password", pwdCrypte);
 
 		RestTemplate restTemplate = new RestTemplate();
 	
+		try {
+			
 		Boolean result = restTemplate.getForObject(requestUrl, Boolean.class, params);
+		 return ResponseEntity.ok(result);
+		} catch (Exception e) {
+			// TODO: handle exception
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur interne du serveur");
+		}
 
-		return result;
+		
 	}
 
 }

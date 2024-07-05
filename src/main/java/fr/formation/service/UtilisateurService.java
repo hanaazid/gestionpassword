@@ -85,6 +85,7 @@ public class UtilisateurService {
 	public Utilisateur connecterUtilisateur(String email, String password) {
 
 		List<Utilisateur> utilisateurs = utilisateurRepository.findAll();
+		
 		for (Utilisateur utilisateur : utilisateurs) {
 			if (utilisateur.getEmail().equals(email) && utilisateur.getPassword().equals(password)) {
 				return utilisateur;

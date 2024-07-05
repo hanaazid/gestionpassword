@@ -33,14 +33,14 @@ public class Utilisateur {
 	@Column(name="dateBirth")
 	private LocalDate dateBirth;
 	
-	@Column(nullable=false)
+	@Column(nullable=false,unique=true)
 	private String email;
 	@Column(nullable=false)
 	private String password;
 	@Column(nullable=false, name="motprimaire")
 	private String motPrimaire;
 	@Column(name="dateinscription")
-	private LocalDateTime DateInscription;
+	private LocalDateTime dateInscription;
 	@JsonIgnoreProperties("utilisateur") // Ignorer la sérialisation de la propriété "utilisateur" dans Compte
 	@OneToMany(mappedBy = "utilisateur")
 	private List<Compte> compteplatforms;
@@ -107,10 +107,10 @@ public class Utilisateur {
 		this.motPrimaire = motPrimaire;
 	}
 	public LocalDateTime getDateInscription() {
-		return DateInscription;
+		return dateInscription;
 	}
 	public void setDateInscription(LocalDateTime dateInscription) {
-		DateInscription = dateInscription;
+		dateInscription = dateInscription;
 	}
 	public List<Compte> getCompteplatforms() {
 		return compteplatforms;

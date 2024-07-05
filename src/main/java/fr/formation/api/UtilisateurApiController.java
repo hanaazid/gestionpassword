@@ -1,10 +1,16 @@
 package fr.formation.api;
 
+import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
+
+import javax.crypto.NoSuchPaddingException;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,11 +21,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import fr.formation.model.Compte;
 import fr.formation.model.Utilisateur;
 import fr.formation.repo.CompteRepository;
 import fr.formation.repo.UtilisateurRepository;
 import fr.formation.request.ModifyUserRequest;
 import fr.formation.service.NotesService;
+import fr.formation.service.PasswordConvertService;
 import fr.formation.service.UtilisateurService;
 import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
@@ -27,6 +35,7 @@ import jakarta.websocket.server.PathParam;
 
 	@RestController
 	@RequestMapping("/api/utilisateurs")
+	@CrossOrigin("*")
 	public class UtilisateurApiController {
 
 	    @Autowired
@@ -40,6 +49,20 @@ import jakarta.websocket.server.PathParam;
 	    
 	    @Autowired
 	    private NotesService notesService;
+	    
+	    @Autowired
+	    private PasswordConvertService pwdService;
+	    
+	    @GetMapping("/{email}/email")
+	    public ResponseEntity<Utilisateur> getUserByEmail(@PathVariable String email) {
+	        Utilisateur user = userRepo.findByEmail(email);
+	        return ResponseEntity.ok(user);
+	    }
+	    @GetMapping("/{id}")
+	    public ResponseEntity<Optional<Utilisateur>> getUserById(@PathVariable Integer id) {
+	        Optional<Utilisateur> user = userRepo.findById(id);
+	        return ResponseEntity.ok(user);
+	    }
 
 	    // Endpoint pour inscrire un utilisateur
 	    @PostMapping("/inscription")
@@ -58,12 +81,31 @@ import jakarta.websocket.server.PathParam;
 	    // pour connecter un utilisateur
 	    @PostMapping("/connexion")
 	    public ResponseEntity<?> connecterUtilisateur(@RequestParam String email, @RequestParam String password) {
-	        try {
+	    		    	
+	    	Utilisateur user = userRepo.findByEmail(email) ;
+	    	String encryptPassword = "";
+	    	
+	    	
+			encryptPassword = pwdService.encrypt_Sha_1(password);
+			
+	    	System.out.println("connexion : " + email + " : " + password);
+	    	System.out.println("password crypté"+ encryptPassword);
+	    	
+	    	if (encryptPassword == user.getPassword()) {
+	    		 return ResponseEntity.ok(user);
+	    	}else {
+	    		return ResponseEntity.badRequest().body("Adresse e-mail ou mot de passe incorrect.");
+	    		//throw new IllegalArgumentException("Adresse e-mail ou mot de passe incorrect.");
+	    	}
+	    	
+	        /*try {
+	        	
+	        	
 	            Utilisateur utilisateur = utilisateurService.connecterUtilisateur(email, password);
 	            return ResponseEntity.ok(utilisateur);
 	        } catch (IllegalArgumentException e) {
 	            return ResponseEntity.badRequest().body(e.getMessage());
-	        }
+	        }*/
 	    }
 
 	    // pour récupérer un mot de passe oublie

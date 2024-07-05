@@ -166,9 +166,7 @@ public class NotesApiController {
         };
         //Verify that the note exist in the remote table
         Boolean noteExist =  Boolean.FALSE;
-        System.out.println("id "+ id);
-        System.out.println("id utilisateur"+ id);
-        System.out.println("id request"+ request.getId());
+        
         String requestUrlNote = "http://localhost:8081/api/notes/" + request.getId()+"/note";
         noteExist = this.restTemplate.getForObject(requestUrlNote, Boolean.class);
         if(!noteExist){

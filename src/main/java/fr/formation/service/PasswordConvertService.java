@@ -16,6 +16,9 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 
 import fr.formation.model.Utilisateur;
 import fr.formation.repo.UtilisateurRepository;
@@ -25,6 +28,28 @@ public class PasswordConvertService {
 	
 	@Autowired
     public UtilisateurRepository repo;
+	
+	public String encrypt_Sha_1(String password) {
+		String hashedPassword = null;
+		try {
+            // Crée une instance de MessageDigest avec l'algorithme SHA-1
+            MessageDigest md = MessageDigest.getInstance("SHA-1");
+
+            // Convertit le mot de passe en tableau de bytes
+            byte[] bytes = md.digest(password.getBytes());
+
+            // Convertit les bytes en une chaîne hexadécimale
+            StringBuilder sb = new StringBuilder();
+            for (byte b : bytes) {
+                sb.append(String.format("%02x", b));
+            }
+            hashedPassword = sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return hashedPassword;
+		
+	}
 	
 	public String encrypt(String password,Integer idUtilisateur) throws NoSuchAlgorithmException, NoSuchPaddingException{
 		// Generate a secret key
