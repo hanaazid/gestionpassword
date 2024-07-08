@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import fr.formation.model.Compte;
+import fr.formation.request.ComptesUserRequest;
 import fr.formation.request.CreateCompteRequest;
 import fr.formation.request.ModifyCompteRequest;
 import fr.formation.response.EntityCreatedResponse;
@@ -47,6 +48,11 @@ public class CompteApiController {
     public ResponseEntity<Compte> getCompteById(@PathVariable Integer id) {
         Compte compte = compteService.getCompteById(id);
         return ResponseEntity.ok(compte);
+    }
+    @GetMapping("/utilisateur") //findByUtilisateurId
+    public ResponseEntity<List<Compte>> getAllComptesByUser(@RequestParam Integer idUtilisateur) {
+        List<Compte> comptes = compteService.findByUtilisateurId(idUtilisateur);
+        return ResponseEntity.ok(comptes);
     }
 
     @PostMapping

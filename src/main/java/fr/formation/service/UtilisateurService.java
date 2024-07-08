@@ -23,7 +23,7 @@ public class UtilisateurService {
 	private static final String MOT_DE_PASSE_FORT_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
 
 	// Méthode pour inscrire un nouvel utilisateur
-	public void inscrireUtilisateur(Utilisateur utilisateur) {
+	public Utilisateur inscrireUtilisateur(Utilisateur utilisateur) {
 
 		if (utilisateur.getPassword() == null || utilisateur.getPassword().isEmpty()) {
 			throw new IllegalArgumentException("Le mot de passe ne peut pas être vide");
@@ -55,7 +55,10 @@ public class UtilisateurService {
 		if (utilisateur.getRole() == null ) {
 			utilisateur.setRole(RoleEnum.USER);
 		}
-		utilisateurs.add(utilisateur);
+		//utilisateurs.add(utilisateur);
+		utilisateur = utilisateurRepository.save(utilisateur);
+		return utilisateur;
+		
 	}
 
 	// Méthode pour vérifier si l'e-mail est déjà utilisé

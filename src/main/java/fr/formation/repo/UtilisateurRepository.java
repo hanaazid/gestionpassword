@@ -9,7 +9,7 @@ import fr.formation.model.Utilisateur;
 
 public interface UtilisateurRepository extends JpaRepository<Utilisateur, Integer> {
 	
-	Utilisateur findByEmail(String email);
+	Optional<Utilisateur> findByEmail(String email);
 	Optional<Utilisateur> findByEmailAndPassword(String email, String password);
 
 }

@@ -25,6 +25,7 @@ import fr.formation.model.Compte;
 import fr.formation.model.Utilisateur;
 import fr.formation.repo.CompteRepository;
 import fr.formation.repo.UtilisateurRepository;
+import fr.formation.request.LoginRequest;
 import fr.formation.request.ModifyUserRequest;
 import fr.formation.service.NotesService;
 import fr.formation.service.PasswordConvertService;
@@ -53,23 +54,50 @@ import jakarta.websocket.server.PathParam;
 	    @Autowired
 	    private PasswordConvertService pwdService;
 	    
-	    @GetMapping("/{email}/email")
-	    public ResponseEntity<Utilisateur> getUserByEmail(@PathVariable String email) {
-	        Utilisateur user = userRepo.findByEmail(email);
+	    @GetMapping("/email")
+	    public ResponseEntity<Optional<Utilisateur>> getUserByEmail(@RequestParam String email) {
+	    	
+	        Optional<Utilisateur> user = userRepo.findByEmail(email);
 	        return ResponseEntity.ok(user);
 	    }
 	    @GetMapping("/{id}")
-	    public ResponseEntity<Optional<Utilisateur>> getUserById(@PathVariable Integer id) {
+	    public ResponseEntity<Optional<Utilisateur>> getUserById(@RequestParam Integer id) {
 	        Optional<Utilisateur> user = userRepo.findById(id);
 	        return ResponseEntity.ok(user);
+	    }
+	    @GetMapping("/login")
+	    public ResponseEntity<?> login(@RequestParam String email, @RequestParam String password ) {
+	        	        
+	        Optional<Utilisateur> user = userRepo.findByEmailAndPassword(email, password) ;
+	    	//String encryptPassword = "";
+	    	
+	    	
+			//encryptPassword = pwdService.encrypt_Sha_1(request.getPassword());
+				
+	    	//if (encryptPassword == user.getPassword()) {
+	        if ( !user.isPresent()  ) {
+	        	System.out.println("KO - email");
+	    		return ResponseEntity.badRequest().body("Adresse e-mail / password incorrect.");
+	    		
+	        }
+	        else {
+	    		System.out.println("ok - password");
+	    		 return ResponseEntity.ok(user);	
+	        }
 	    }
 
 	    // Endpoint pour inscrire un utilisateur
 	    @PostMapping("/inscription")
 	    public ResponseEntity<?> inscrireUtilisateur(@RequestBody Utilisateur utilisateur) {
 	        try {
-	            utilisateurService.inscrireUtilisateur(utilisateur);
-	            return ResponseEntity.ok("Inscription réussie");
+	        	Utilisateur user =  
+	        		utilisateurService.inscrireUtilisateur(utilisateur);
+	        	if ( user == null  ) {
+	        		return ResponseEntity.badRequest().body("Anomalie création de user");
+	        	}
+	        	else {
+	            return ResponseEntity.ok(user);
+	        	}
 	        } catch (IllegalArgumentException e) {
 	            return ResponseEntity.badRequest().body(e.getMessage());
 	        } catch (Exception e) {
@@ -79,14 +107,14 @@ import jakarta.websocket.server.PathParam;
 
 
 	    // pour connecter un utilisateur
-	    @PostMapping("/connexion")
-	    public ResponseEntity<?> connecterUtilisateur(@RequestParam String email, @RequestParam String password) {
+	   // @PostMapping("/connexion")
+	   // public ResponseEntity<?> connecterUtilisateur(@RequestParam String email, @RequestParam String password) {
 	    		    	
-	    	Utilisateur user = userRepo.findByEmail(email) ;
+	    	/* Optional<Utilisateur> user = 			userRepo.findByEmail(email) ;
 	    	String encryptPassword = "";
 	    	
 	    	
-			encryptPassword = pwdService.encrypt_Sha_1(password);
+			encryptPassword = pwdService.encrypt_Sha_1(password); 
 			
 	    	System.out.println("connexion : " + email + " : " + password);
 	    	System.out.println("password crypté"+ encryptPassword);
@@ -97,7 +125,7 @@ import jakarta.websocket.server.PathParam;
 	    		return ResponseEntity.badRequest().body("Adresse e-mail ou mot de passe incorrect.");
 	    		//throw new IllegalArgumentException("Adresse e-mail ou mot de passe incorrect.");
 	    	}
-	    	
+	    	*/
 	        /*try {
 	        	
 	        	
@@ -106,7 +134,7 @@ import jakarta.websocket.server.PathParam;
 	        } catch (IllegalArgumentException e) {
 	            return ResponseEntity.badRequest().body(e.getMessage());
 	        }*/
-	    }
+	    //}
 
 	    // pour récupérer un mot de passe oublie
 	    @PostMapping("/recuperation-mot-de-passe")

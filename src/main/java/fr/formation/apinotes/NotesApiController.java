@@ -61,8 +61,8 @@ public class NotesApiController {
 	
 	
 
-	@GetMapping("/{idUtilisateur}")
-	public List<Notes> getNoteByIdUtilsateur(@PathVariable int idUtilisateur)
+	@GetMapping("")
+	public List<Notes> getNoteByIdUtilsateur(@RequestParam int idUtilisateur)
 	{
 		// The note must be returned with the content clear ( decrypted )
 		String requestUrl = "http://localhost:8081/api/notes/" + idUtilisateur+ "/allnotesuser";

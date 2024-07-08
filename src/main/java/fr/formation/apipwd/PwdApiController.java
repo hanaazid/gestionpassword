@@ -1,5 +1,6 @@
 package fr.formation.apipwd;
 
+import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
@@ -38,9 +39,6 @@ public class PwdApiController {
 	@Autowired
 	public RestTemplate restTemplate; 
 	
-	//@Autowired
-    //public UtilisateurRepository repo;
-	
 	@Autowired
 	public PasswordConvertService pwdService;
 	
@@ -53,23 +51,26 @@ public class PwdApiController {
         //String pwdCrypte = "";
 		//pwdCrypte = pwdService.encrypt_Sha_1(password);
 		
-		//System.out.println("clair : "+ password + " - crypte : "+ pwdCrypte );
+		System.out.println( "crypte : "+ password );
 		
 		String requestUrl = "http://localhost:8083/api/password/" + password;
 		//System.out.println(pwdCrypte);
-		
-		Map<String, String> params = new HashMap<String, String>();
-		//params.put("password", pwdCrypte);
+		//String requestUrl = "http://localhost:8083/api/password/" + URLEncoder.encode(pwdCrypte, StandardCharsets.UTF_8.toString());
 
+	
 		RestTemplate restTemplate = new RestTemplate();
 	
 		try {
 			
-		Boolean result = restTemplate.getForObject(requestUrl, Boolean.class, params);
+			
+            Boolean result = restTemplate.getForObject(requestUrl, Boolean.class);
+
+			
 		 return ResponseEntity.ok(result);
 		} catch (Exception e) {
 			// TODO: handle exception
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur interne du serveur");
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing the password.");
 		}
 
 		
