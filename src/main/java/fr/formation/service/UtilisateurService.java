@@ -5,12 +5,16 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.stereotype.Service;
 
 import fr.formation.model.RoleEnum;
 import fr.formation.model.Utilisateur;
 import fr.formation.repo.UtilisateurRepository;
+import fr.formation.request.CreateUserRequest;
 
 
 @Service
@@ -23,7 +27,7 @@ public class UtilisateurService {
 	private static final String MOT_DE_PASSE_FORT_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
 
 	// Méthode pour inscrire un nouvel utilisateur
-	public Utilisateur inscrireUtilisateur(Utilisateur utilisateur) {
+	public Utilisateur inscrireUtilisateur(CreateUserRequest utilisateur) {
 
 		if (utilisateur.getPassword() == null || utilisateur.getPassword().isEmpty()) {
 			throw new IllegalArgumentException("Le mot de passe ne peut pas être vide");
@@ -48,16 +52,20 @@ public class UtilisateurService {
 			utilisateur.setPassword(genererMotDePasseFort());	
 		}
 		// Définir la date d'inscription
-		utilisateur.setDateInscription(LocalDateTime.now());
+		
 		// Ajouter l'utilisateur à la liste
 		
-		//Default value of user'rile is USER
-		if (utilisateur.getRole() == null ) {
-			utilisateur.setRole(RoleEnum.USER);
-		}
+		
 		//utilisateurs.add(utilisateur);
-		utilisateur = utilisateurRepository.save(utilisateur);
-		return utilisateur;
+		Utilisateur user = new Utilisateur();
+		BeanUtils.copyProperties(utilisateur, user);
+		user.setDateInscription(LocalDateTime.now());
+		//Default value of user'rile is USER
+		if (user.getRole() == null ) {
+				user.setRole(RoleEnum.USER);
+		}
+		user = utilisateurRepository.save(user);
+		return user;
 		
 	}
 

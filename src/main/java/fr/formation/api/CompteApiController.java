@@ -78,8 +78,8 @@ public class CompteApiController {
         return ResponseEntity.ok(savedCompte);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCompte(@PathVariable Integer id) {
+    @DeleteMapping
+    public ResponseEntity<Void> deleteCompte(@RequestParam Integer id) {
         compteService.deleteCompte(id);
         return ResponseEntity.noContent().build();
     }

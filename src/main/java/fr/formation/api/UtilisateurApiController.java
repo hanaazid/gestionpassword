@@ -25,6 +25,7 @@ import fr.formation.model.Compte;
 import fr.formation.model.Utilisateur;
 import fr.formation.repo.CompteRepository;
 import fr.formation.repo.UtilisateurRepository;
+import fr.formation.request.CreateUserRequest;
 import fr.formation.request.LoginRequest;
 import fr.formation.request.ModifyUserRequest;
 import fr.formation.service.NotesService;
@@ -60,7 +61,7 @@ import jakarta.websocket.server.PathParam;
 	        Optional<Utilisateur> user = userRepo.findByEmail(email);
 	        return ResponseEntity.ok(user);
 	    }
-	    @GetMapping("/{id}")
+	    @GetMapping("")
 	    public ResponseEntity<Optional<Utilisateur>> getUserById(@RequestParam Integer id) {
 	        Optional<Utilisateur> user = userRepo.findById(id);
 	        return ResponseEntity.ok(user);
@@ -88,10 +89,11 @@ import jakarta.websocket.server.PathParam;
 
 	    // Endpoint pour inscrire un utilisateur
 	    @PostMapping("/inscription")
-	    public ResponseEntity<?> inscrireUtilisateur(@RequestBody Utilisateur utilisateur) {
+//	    public ResponseEntity<?> inscrireUtilisateur(@RequestBody Utilisateur utilisateur) {
+	    public ResponseEntity<?> inscrireUtilisateur(@RequestBody CreateUserRequest utilisateurRequest) {
 	        try {
 	        	Utilisateur user =  
-	        		utilisateurService.inscrireUtilisateur(utilisateur);
+	        		utilisateurService.inscrireUtilisateur(utilisateurRequest);
 	        	if ( user == null  ) {
 	        		return ResponseEntity.badRequest().body("Anomalie création de user");
 	        	}

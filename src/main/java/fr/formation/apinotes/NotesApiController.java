@@ -216,8 +216,8 @@ public class NotesApiController {
   }
 
   //Delete the note  id
-  @DeleteMapping("/{id}")
-  public void delete(@PathVariable("id") Integer id) {
+  @DeleteMapping("") //("/{id}")
+  public void delete(@RequestParam("id") Integer id) {
 	                 
 	    String requestUrl = "http://localhost:8081/api/notes/" + id;
 	    Map<String, String> params = new HashMap<String, String>();
