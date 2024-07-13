@@ -44,8 +44,8 @@ public class CompteApiController {
         return ResponseEntity.ok(comptes);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Compte> getCompteById(@PathVariable Integer id) {
+    @GetMapping("/compte")
+    public ResponseEntity<Compte> getCompteById(@RequestParam Integer id) {
         Compte compte = compteService.getCompteById(id);
         return ResponseEntity.ok(compte);
     }
@@ -63,8 +63,9 @@ public class CompteApiController {
         return new EntityCreatedResponse(newCompteId, request.getUtilisateurId());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Compte> updateCompte(@Valid @RequestBody ModifyCompteRequest request, @PathVariable("id") Integer id) {
+    @PutMapping  //("/{id}")
+    public ResponseEntity<Compte> updateCompte(@Valid @RequestBody ModifyCompteRequest request, 
+    		@RequestParam("id") Integer id) {
         if (!compteService.existsCompteById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ID Compte inexistant");
         }

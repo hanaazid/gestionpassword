@@ -97,16 +97,26 @@ public class NotesApiController {
 		return notesClear ; 
 	}
 	
-	@GetMapping("/{idNote}/note")
-	public Boolean getExistNoteByIdNote(@PathVariable int idNote)
+	@GetMapping("/existnote")
+	public Boolean getExistNoteByIdNote(@RequestParam int idNote)
 	{
-		String requestUrl = "http://localhost:8081/api/notes/" + idNote+"/note";
+		String requestUrl = "http://localhost:8081/api/notes/" + idNote+"/existnote";
         
-		Boolean bool = Boolean.FALSE;
-        bool = this.restTemplate.getForObject(requestUrl, Boolean.class);
+		Boolean bool = this.restTemplate.getForObject(requestUrl, Boolean.class);
         
         if (!bool ) { logger.debug("Note {} not exist!", idNote);};
         return bool;
+
+	}
+	@GetMapping("/note")
+	public Notes getNoteByIdNote(@RequestParam int idNote)
+	{
+		String requestUrl = "http://localhost:8081/api/notes/" + idNote+"/note";
+        
+		Notes note = this.restTemplate.getForObject(requestUrl, Notes.class);
+        
+        if (note == null ) { logger.debug("Note {} not exist!", idNote);};
+        return note;
 
 	}
 	// Création de note
@@ -167,7 +177,7 @@ public class NotesApiController {
         //Verify that the note exist in the remote table
         Boolean noteExist =  Boolean.FALSE;
         
-        String requestUrlNote = "http://localhost:8081/api/notes/" + request.getId()+"/note";
+        String requestUrlNote = "http://localhost:8081/api/notes/" + request.getId()+"/existnote";
         noteExist = this.restTemplate.getForObject(requestUrlNote, Boolean.class);
         if(!noteExist){
           	// EntityCreatedResponse entity = new EntityCreatedResponse();
