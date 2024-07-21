@@ -22,6 +22,9 @@ public class UtilisateurService {
 
 	@Autowired
 	private UtilisateurRepository utilisateurRepository;
+	
+	@Autowired
+	private PasswordUtils pwdService;
 
 	private List<Utilisateur> utilisateurs = new ArrayList<>();
 	private static final String MOT_DE_PASSE_FORT_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
@@ -64,6 +67,10 @@ public class UtilisateurService {
 		if (user.getRole() == null ) {
 				user.setRole(RoleEnum.USER);
 		}
+		// hasher le password 
+		System.out.println("in enregsitrement password : " + user.getPassword() );
+		user.setPassword(pwdService.hashPassword(user.getPassword()));
+		System.out.println("in enregsitrement password after hash: " + user.getPassword() );
 		user = utilisateurRepository.save(user);
 		return user;
 		

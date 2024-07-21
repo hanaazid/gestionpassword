@@ -30,6 +30,7 @@ import fr.formation.request.LoginRequest;
 import fr.formation.request.ModifyUserRequest;
 import fr.formation.service.NotesService;
 import fr.formation.service.PasswordConvertService;
+import fr.formation.service.PasswordUtils;
 import fr.formation.service.UtilisateurService;
 import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
@@ -43,6 +44,8 @@ import jakarta.websocket.server.PathParam;
 	    @Autowired
 	    private UtilisateurService utilisateurService;
 	    
+	    @Autowired
+	    private PasswordUtils pwdHashedService;
 	    @Autowired
 	    private CompteRepository compteRepo;
 	    
@@ -69,14 +72,20 @@ import jakarta.websocket.server.PathParam;
 	    @GetMapping("/login")
 	    public ResponseEntity<?> login(@RequestParam String email, @RequestParam String password ) {
 	        	        
-	        Optional<Utilisateur> user = userRepo.findByEmailAndPassword(email, password) ;
+	    	String pwdHashed = pwdHashedService.hashPassword(password);
+	    	System.out.println("Pwd Hashed :in login password : " + password );
+	    	System.out.println("Pwd Hashed :in login password : " + pwdHashed );
+	    	
+	        Optional<Utilisateur> user = userRepo.findByEmail(email) ;
+	        
+	        Boolean bool = pwdHashedService.checkPassword(password, user.get().getPassword());
 	    	//String encryptPassword = "";
 	    	
 	    	
 			//encryptPassword = pwdService.encrypt_Sha_1(request.getPassword());
 				
 	    	//if (encryptPassword == user.getPassword()) {
-	        if ( !user.isPresent()  ) {
+	        if ( !user.isPresent() || !bool ) {
 	        	System.out.println("KO - email");
 	    		return ResponseEntity.badRequest().body("Adresse e-mail / password incorrect.");
 	    		
