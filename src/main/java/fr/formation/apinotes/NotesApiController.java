@@ -83,7 +83,7 @@ public class NotesApiController {
         	
         	try {
 				contenuClear = this.cryptService.decrypt( note.getContenu(), idUser);
-				System.out.println(contenuClear);
+				 
 			} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
 				// TODO Auto-generated catch block
 				logger.error("Encrypt/Decrypt bug ");
@@ -112,10 +112,22 @@ public class NotesApiController {
 	public Notes getNoteByIdNote(@RequestParam int idNote)
 	{
 		String requestUrl = "http://localhost:8081/api/notes/" + idNote+"/note";
+		String contenuClear = "";
         
 		Notes note = this.restTemplate.getForObject(requestUrl, Notes.class);
         
         if (note == null ) { logger.debug("Note {} not exist!", idNote);};
+        Integer idUser = note.getIdUtilisateur();
+
+    	try {
+			contenuClear = this.cryptService.decrypt( note.getContenu(), idUser);
+			System.out.println(contenuClear);
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+			// TODO Auto-generated catch block
+			logger.error("Encrypt/Decrypt bug ");
+			e.printStackTrace();
+		}
+    	note.setContenu(contenuClear);
         return note;
 
 	}
