@@ -5,6 +5,7 @@ import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.Random;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -28,6 +29,8 @@ public class PasswordConvertService {
 	
 	@Autowired
     public UtilisateurRepository repo;
+	
+	private static final Random random = new Random();
 	
 	public String encrypt_Sha_1(String password) {
 		String hashedPassword = null;
@@ -214,6 +217,28 @@ public class PasswordConvertService {
           return decryptedString;
 
       	  
+        }
+        
+
+        //méthode de rajout d'un chiffre aléatoire en position paire avant chiffrement
+        public   String insertRandomDigits(String password) {
+            StringBuilder newPassword = new StringBuilder();
+            for (char c : password.toCharArray()) {
+                newPassword.append(c);
+                int randomDigit = 1 + random.nextInt(9); // Génère un chiffre entre 1 et 9
+                newPassword.append(randomDigit);
+            }
+            return newPassword.toString();
+        }
+        //méthode de suppression du caratères paire
+        public   String removeEvenIndexedChars(String str) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < str.length(); i++) {
+                if (i % 2 != 0) {
+                    sb.append(str.charAt(i));
+                }
+            }
+            return sb.toString();
         }
 
 }

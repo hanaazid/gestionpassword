@@ -1,6 +1,7 @@
 package fr.formation.api;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.Optional;
 
 import javax.crypto.NoSuchPaddingException;
@@ -57,6 +58,7 @@ import jakarta.websocket.server.PathParam;
 	    
 	    @Autowired
 	    private PasswordConvertService pwdService;
+	   
 	    
 	    @GetMapping("/email")
 	    public ResponseEntity<Optional<Utilisateur>> getUserByEmail(@RequestParam String email) {
@@ -172,6 +174,35 @@ import jakarta.websocket.server.PathParam;
 	    	if (oldUser.getMotPrimaire() != request.getMotPrimaire()) {
 	    		//decrypt the old content and encrypt with the new motPrimaire
 	    		
+	    		List<Compte> lcompte =   compteRepo.findByUtilisateurId(id);
+	    		String motPrimaireOld = oldUser.getMotPrimaire();
+	    		String motPrimaire = request.getMotPrimaire();
+	    		String pwdTmp = "";
+	    		for (Compte compte : lcompte) {
+	    			pwdTmp = compte.getPassword();
+	    			try {
+	    				pwdTmp = pwdService.decryptWithString(pwdTmp, motPrimaireOld);
+	    			} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+	    				// TODO Auto-generated catch block
+	    				e.printStackTrace();
+	    			}
+	    			pwdTmp = pwdService.removeEvenIndexedChars(pwdTmp);
+	    			
+	    			pwdTmp = pwdService.insertRandomDigits(pwdTmp);
+	    			try {
+	    				
+	    				pwdTmp = pwdService.encryptWithString(pwdTmp, motPrimaireOld);
+	    			} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+	    				// TODO Auto-generated catch block
+	    				e.printStackTrace();
+	    			}
+	    			
+	        		compte.setPassword(pwdTmp);
+	        		compteRepo.save(compte);
+	        	
+	    		
+	            }
+	    		
 	    		notesService.modifyNotesByUserId(id,  oldUser.getMotPrimaire() , request.getMotPrimaire());
 	    	};
 	    	
@@ -198,19 +229,7 @@ import jakarta.websocket.server.PathParam;
 	    }
 	    
 	}
-    // Endpoint pour récupérer la liste des utilisateurs avec les mots de passe masqués
-   // @GetMapping("/liste-mots-de-passe-masques")
-	/*
-	 * public Iterable<Utilisateur> getListeUtilisateursMasques() { return
-	 * utilisateurService.getListeUtilisateursMasques(); }
-	 * 
-	 * // Endpoint pour récupérer un utilisateur avec son mot de passe visible après
-	 * "consulter"
-	 * 
-	 * @GetMapping("/{id}") public Utilisateur getUtilisateur(@PathVariable Long id)
-	 * { return utilisateurService.getUtilisateur(id); }
-	 */
-
+    
 
 	
 

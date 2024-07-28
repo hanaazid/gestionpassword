@@ -153,19 +153,6 @@ public class UtilisateurService {
 
 
 
-/*
- * public Utilisateur getUtilisateur(String id) { Utilisateur utilisateur =
- * utilisateurs.stream() .filter(u -> u.getId().equals(id)) .findFirst()
- * .orElseThrow(() -> new
- * IllegalArgumentException("Utilisateur non trouvé avec l'ID: " + id));
- * 
- * // Afficher le mot de passe complet seulement si l'utilisateur le demande //
- * Vous pouvez implémenter cette logique selon vos besoins
- * 
- * return utilisateur; } }
- */
-
-
 
 
 
