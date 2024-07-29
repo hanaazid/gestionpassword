@@ -234,7 +234,7 @@ public class PasswordConvertService {
         public   String removeEvenIndexedChars(String str) {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < str.length(); i++) {
-                if (i % 2 != 0) {
+                if (i % 2 == 0) {
                     sb.append(str.charAt(i));
                 }
             }

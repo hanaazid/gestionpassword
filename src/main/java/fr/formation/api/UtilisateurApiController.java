@@ -162,7 +162,7 @@ import jakarta.websocket.server.PathParam;
 	    // List of Users
 	   
 	    // User modification 
-	    @PutMapping  //("/{id}")
+	    @PutMapping   
 	    public void modifyUser(@Valid @RequestBody ModifyUserRequest request
 	    		,@RequestParam("id") Integer id) {
 	    	

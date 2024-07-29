@@ -36,10 +36,12 @@ public class CompteService {
 		//user.setPassword(pwdService.hashPassword(user.getPassword()));
 		List<Compte> lcompte =  compteRepository.findAll();
 		String pwdTmp = "";
+		String motPrimaire = "";
 		for (Compte compte : lcompte) {
 			pwdTmp = compte.getPassword();
 			try {
-				pwdTmp = pwdService.decryptWithString(pwdTmp, compte.getUtilisateur().getMotPrimaire());
+				motPrimaire = compte.getUtilisateur().getMotPrimaire();
+				pwdTmp = pwdService.decryptWithString(pwdTmp, motPrimaire);
 			} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -85,12 +87,14 @@ public class CompteService {
         Compte compte = new Compte();
         BeanUtils.copyProperties(compteRequest, compte);
         String pwdTmp = compte.getPassword();
+        String motPrimaire = utilisateur.getMotPrimaire();
+        System.out.println("mot primaire" + motPrimaire);
         
         try {
         	// ajout de chiffre aléatoire en position paire
         	pwdTmp = pwdService.insertRandomDigits(pwdTmp);
             // Déchiffrement
-            pwdTmp = pwdService.encryptWithString(pwdTmp, compte.getUtilisateur().getMotPrimaire());
+            pwdTmp = pwdService.encryptWithString(pwdTmp, motPrimaire);
             
            
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
