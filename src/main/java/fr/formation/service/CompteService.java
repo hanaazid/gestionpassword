@@ -109,36 +109,33 @@ public class CompteService {
         return compte.getId();
     }
 
-    public Compte updateCompte(Compte compte) {
+    public Compte updateCompte(Compte compte, String motPrimaire) {
         if (compte.getId() == null) {
             throw new RuntimeException("Besoin d'un id pour faire une mise à jour.");
         }
-
-        Compte existingCompte = getCompteById(compte.getId());
-        String pwdTmp = compte.getPassword();
-        // Copie les propriétés mises à jour, mais conserve certaines anciennes propriétés
-        existingCompte.setPlatformname(compte.getPlatformname());
-        existingCompte.setDescription(compte.getDescription());
-        existingCompte.setUserName(compte.getUserName());
-        existingCompte.setEmail(compte.getEmail());
-        existingCompte.setAdressUrl(compte.getAdressUrl());
+        //System.out.println("in updateCompte");
         
+        String pwdTmp = compte.getPassword();
         try {
         	// ajout de chiffre aléatoire en position paire
         	pwdTmp = pwdService.insertRandomDigits(pwdTmp);
+        	
+        	System.out.println("in update : motPrimaire  : "+pwdTmp);
             // Déchiffrement
-            pwdTmp = pwdService.encryptWithString(pwdTmp, compte.getUtilisateur().getMotPrimaire());
+            pwdTmp = pwdService.encryptWithString(pwdTmp, motPrimaire);
+            System.out.println("in update : password crypte : "+pwdTmp);
             
            
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+        	System.out.println("in update ko");
             e.printStackTrace();
             throw new RuntimeException("Erreur lors du traitement du mot de passe", e);
         }
-        existingCompte.setPassword(pwdTmp);
+        compte.setPassword(pwdTmp);
         
-        existingCompte.setDateUpdate(LocalDateTime.now());
+        compte.setDateUpdate(LocalDateTime.now());
 
-        return compteRepository.save(existingCompte);
+        return compteRepository.save(compte);
     }
 
     public boolean existsCompteById(Integer id) {

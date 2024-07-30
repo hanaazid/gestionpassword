@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import fr.formation.model.Compte;
+import fr.formation.model.Utilisateur;
+import fr.formation.repo.UtilisateurRepository;
 import fr.formation.request.ComptesUserRequest;
 import fr.formation.request.CreateCompteRequest;
 import fr.formation.request.ModifyCompteRequest;
@@ -35,8 +37,13 @@ public class CompteApiController {
 
     @Autowired
     private CompteService compteService;
+    
+
+    @Autowired
+    private UtilisateurRepository userRepo;
 
     Logger logger = LoggerFactory.getLogger(CompteApiController.class);
+    
 
     @GetMapping
     public ResponseEntity<List<Compte>> getAllComptes() {
@@ -74,7 +81,13 @@ public class CompteApiController {
         BeanUtils.copyProperties(request, existingCompte, "id", "dateAdded", "dateUpdate");
 
         existingCompte.setDateUpdate(LocalDateTime.now());
-        Compte savedCompte = compteService.updateCompte(existingCompte);
+        
+        Utilisateur user = userRepo.getById(existingCompte.getUtilisateur().getId());
+        System.out.println("Avant update *******");
+        
+        
+        
+        Compte savedCompte = compteService.updateCompte(existingCompte, user.getMotPrimaire() );
 
         return ResponseEntity.ok(savedCompte);
     }

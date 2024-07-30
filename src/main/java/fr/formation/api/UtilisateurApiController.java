@@ -186,12 +186,12 @@ import jakarta.websocket.server.PathParam;
 	    				// TODO Auto-generated catch block
 	    				e.printStackTrace();
 	    			}
-	    			pwdTmp = pwdService.removeEvenIndexedChars(pwdTmp);
+	    			//pwdTmp = pwdService.removeEvenIndexedChars(pwdTmp);
 	    			
-	    			pwdTmp = pwdService.insertRandomDigits(pwdTmp);
+	    			//pwdTmp = pwdService.insertRandomDigits(pwdTmp);
 	    			try {
 	    				
-	    				pwdTmp = pwdService.encryptWithString(pwdTmp, motPrimaireOld);
+	    				pwdTmp = pwdService.encryptWithString(pwdTmp, motPrimaire);
 	    			} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
 	    				// TODO Auto-generated catch block
 	    				e.printStackTrace();
